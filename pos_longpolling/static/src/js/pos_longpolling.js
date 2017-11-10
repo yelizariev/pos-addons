@@ -24,6 +24,9 @@ odoo.define('pos_longpolling', function(require){
             this.serv_adr = sync_server || '';
             this.longpolling_connection = new exports.LongpollingConnection(this.pos);
             this.activated = false;
+            var callback = this.longpolling_connection.network_is_on;
+            this.add_channel_callback("pos.longpolling", callback, this.longpolling_connection);
+
         },
         poll: function(address) {
             var self = this;
@@ -137,8 +140,6 @@ odoo.define('pos_longpolling', function(require){
             this.bus.name = 'Default';
             this.ready.then(function () {
                 self.bus.init_bus(self);
-                var callback = self.bus.longpolling_connection.network_is_on;
-                self.bus.add_channel_callback("pos.longpolling", callback, self.bus.longpolling_connection);
                 if (self.config.autostart_longpolling){
                     self.bus.start();
                 }
