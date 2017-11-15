@@ -45,8 +45,13 @@ odoo.define('pos_longpolling', function(require){
                 if(!self.stop){
                     self.poll();
                 }
-
+                //new condition: change longpolling icon status if needed
+                if (!self.longpolling_connection.status) {
+                    self.longpolling_connection.network_is_on();
+                }
             }, function(unused, e) {
+                //new line: change longpolling icon status
+                self.longpolling_connection.network_is_off();
                 // no error popup if request is interrupted or fails for any reason
                 e.preventDefault();
                 // random delay to avoid massive longpolling
@@ -164,6 +169,7 @@ odoo.define('pos_longpolling', function(require){
             this.status = false;
             // Is the message "PONG" received from the server
             this.response_status = false;
+            this.connection_attempt = false;
         },
         network_is_on: function(message) {
             if (message) {

@@ -90,9 +90,14 @@ odoo.define('pos_multi_session', function(require){
                     self.get_bus('sync_server').add_channel_callback(channel_name, callback, self);
                     self.sync_bus = self.get_bus('sync_server');
                     self.get_bus('sync_server').start();
+                    if (!self.config.autostart_longpolling) {
+                        self.bus.activated = false;
+                        self.bus.start();
+                    }
                 } else {
                     self.sync_bus = self.get_bus();
                     if (!self.config.autostart_longpolling) {
+                        self.sync_bus.activated = false;
                         self.sync_bus.start();
                     }
                 }
