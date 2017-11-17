@@ -45,10 +45,10 @@ odoo.define('pos_longpolling', function(require){
                 if(!self.stop){
                     self.poll();
                 }
-                //difference with super
+                //difference with original
                 self.longpolling_connection.network_is_on();
             }, function(unused, e) {
-                //difference with super
+                //difference with original
                 self.longpolling_connection.network_is_off();
                 // no error popup if request is interrupted or fails for any reason
                 e.preventDefault();
@@ -73,9 +73,6 @@ odoo.define('pos_longpolling', function(require){
             }
         },
         start: function(){
-            if (this.activated){
-                return;
-            }
             var self = this;
             this.last = this.pos.db.load(this.bus_id_last(), 0);
             this.on("notification", this, this.on_notification_callback);
@@ -294,6 +291,9 @@ odoo.define('pos_longpolling', function(require){
         start: function(){
             this._super();
             var self = this;
+            if (!this.pos.config.autostart_longpolling) {
+                $('.serv_primary').remove();
+            }
             this.pos.bus.longpolling_connection.on("change:poll_connection", function(status){
                 var selector = '.serv_primary';
                 self.set_poll_status(selector, self.pos.bus);
