@@ -240,16 +240,19 @@ odoo.define('pos_longpolling', function(require){
     var Status_Widget = chrome.StatusWidget;
     Status_Widget.include({
         set_poll_status: function(selector, current_bus) {
-            var element = self.$(selector);
             if (current_bus.activated) {
                 if (current_bus.longpolling_connection.status) {
-                    element.removeClass('oe_red oe_green oe_gray').addClass('oe_green');
+                    this.set_icon_class(selector, 'oe_green');
                 } else {
-                    element.removeClass('oe_red oe_green oe_gray').addClass('oe_red');
+                    this.set_icon_class(selector, 'oe_red');
                 }
             } else {
-                element.removeClass('oe_red oe_green oe_gray').addClass('oe_gray');
+                this.set_icon_class(selector, 'oe_gray');
             }
+        },
+        set_icon_class: function(selector, new_class) {
+            var element = self.$(selector);
+            element.removeClass('oe_red oe_green oe_gray').addClass(new_class);
         },
     });
 
