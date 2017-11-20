@@ -241,12 +241,20 @@ odoo.define('pos_longpolling', function(require){
     Status_Widget.include({
         set_poll_status: function(selector, current_bus) {
             var element = self.$(selector);
-            if (current_bus.longpolling_connection.status) {
-                element.removeClass('oe_red');
-                element.addClass('oe_green');
+            if (current_bus.channels.length) {
+                if (current_bus.longpolling_connection.status) {
+                    element.removeClass('oe_red');
+                    element.removeClass('oe_gray');
+                    element.addClass('oe_green');
+                } else {
+                    element.removeClass('oe_green');
+                    element.removeClass('oe_gray');
+                    element.addClass('oe_red');
+                }
             } else {
+                element.removeClass('oe_red');
                 element.removeClass('oe_green');
-                element.addClass('oe_red');
+                element.addClass('oe_gray');
             }
         },
     });
@@ -295,12 +303,6 @@ odoo.define('pos_longpolling', function(require){
             this._super();
             var self = this;
             var selector = '.serv_primary';
-            var element = $(selector);
-            if (!this.pos.bus.channels.length) {
-                element.removeClass('oe_red');
-                element.removeClass('oe_green');
-                element.addClass('oe_gray');
-            }
             this.pos.bus.longpolling_connection.on("change:poll_connection", function(status){
                 self.set_poll_status(selector, self.pos.bus);
             });
